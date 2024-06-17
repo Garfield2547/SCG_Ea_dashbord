@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'MySCG'; /* ตั้งชื่อ font-family ตามที่คุณต้องการ */
+    src: url('font/SCG-REG.OTF') format('opentype'); /* ใช้ฟอนต์ตัวบาง */
+    font-weight: normal; /* ระบุว่าเป็นฟอนต์ตัวบาง */
+  }
+  
+  @font-face {
+    font-family: 'MySCG'; /* ตั้งชื่อ font-family ตามที่คุณต้องการ */
+    src: url('font/SCG-BOL.OTF') format('opentype'); /* ใช้ฟอนต์ตัวหนา */
+    font-weight: bold; /* ระบุว่าเป็นฟอนต์ตัวหนา */
+  }
+  
+  .font-regular {
+    font-family: 'MySCG', sans-serif; /* ใช้ฟอนต์ตัวบาง */
+    font-weight: normal; /* ระบุว่าเป็นฟอนต์ตัวบาง */
+  }
+  
+  .font-bold {
+    font-family: 'MySCG', sans-serif; /* ใช้ฟอนต์ตัวหนา */
+    font-weight: bold; /* ระบุว่าเป็นฟอนต์ตัวหนา */
+  }
+  
