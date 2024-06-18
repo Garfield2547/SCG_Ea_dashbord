@@ -23,7 +23,7 @@ ChartJS.register(
 
 const In_Pro = () => {
     // Original data values
-    const processData = [175, 10, 15.5, 30.55, 10.25];
+    const processData = [75, 10, 15.5, 30.55, 10.25];
     const nonProcessData = [100, 2.1, 15.5, 20.45, 21.45];
 
     // Calculate totals for each group

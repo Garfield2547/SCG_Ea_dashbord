@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import MU_H_Co from '../Component/Mu_H_Co';
 import Im_P from '../ํTable/Im_P';
@@ -6,10 +6,22 @@ import { Nb_Co } from '../Component/Nb_Co';
 import Cot_P_PN from '../Graph/Cot_P_PN';
 import Cot_P_PW from '../Graph/Cot_P_PW';
 import T_PW_U from '../ํTable/T_PW_U';
+import MyDate from '../Component/MyDate';
+import Mymonth from '../Component/Mymonth';
 
 
 
 function CoT_P() {
+  const [selectedDate, setSelectedDate] = useState('');
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 0).toString().padStart(2, '0'); // เดือนต้องเป็นสองหลัก เช่น 01, 02, ...
+    setSelectedDate(`${year}-${month}`);
+  }, []);
+
+  
   return (
     <>
       <Nb_Co />
@@ -19,7 +31,7 @@ function CoT_P() {
 
         <div className='pl-5 pt-7 flex flex-col ml-2 w-full' style={{ width: '1700px' }}>
           <span className='text-4xl font-bold text-black'>Piece Work</span>
-          <span className='text-4xl font-bold '> มิถุนายน พ.ศ.2567</span>
+          <Mymonth selectedDate={selectedDate} />
         </div>
         <div className='flex flex-row pt-6 w-full'>
           <div className='w-1/4 text-center m-4 w-full '>
@@ -28,7 +40,7 @@ function CoT_P() {
           </div>
           <div className='w-1/4 text-center m-4 w-full '>
             <div className='h-8 text-white font-bold text-2xl ' style={{ backgroundColor: "#333333" }}>เดือน /ปี</div>
-            <div className='h-9 bg-slate-300 p-2'></div>
+            <div className='h-9 bg-slate-300 p-2'> <MyDate setSelectedDate={setSelectedDate} /> </div>
           </div>
 
           <div className='w-1/2 text-center text-white font-bold h-16 mt-4 pt-5' style={{ backgroundColor: "#333333" }}>

@@ -1,9 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-const MyDate = () => {
+const MyDate = ({ setSelectedDate }) => {
+  const handleChange = (event) => {
+    setSelectedDate(event.target.value);
+  }
+
   return (
-    <input className=' h-6 pl-7 bg-transparent font-bold text-lg' style={{ width: "200px" }} type="month" />
-  )
+    <input
+      className='h-6 pl-6 bg-transparent font-bold text-xl'
+      style={{ width: "200px" }}
+      type="month"
+      onChange={handleChange}
+    />
+  );
 }
 
-export default MyDate
+export default MyDate;
