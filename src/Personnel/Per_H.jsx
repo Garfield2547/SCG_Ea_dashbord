@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import Per_G from '../Graph/Per_G';
 import Gar from '../gar';
@@ -10,16 +10,22 @@ import { Navbar } from '../Component/Navbar';
 import Menu_Ham from '../Component/Menu_Ham';
 import MyDate from '../Component/MyDate';
 import Mymonth from '../Component/Mymonth';
+import DEPA_Per from '../Dropdown/DEPA_Per';
+import SEC_Per from '../Dropdown/SEC_Per';
+import Per_Pro from '../Graph/Per_Pro';
+import CON_Par from '../Dropdown/CON_Par';
 
 function Per_H() {
   const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDepa, setSelectedDepa] = useState('ทั้งหมด');
 
   useEffect(() => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 0).toString().padStart(2, '0'); // เดือนต้องเป็นสองหลัก เช่น 01, 02, ...
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // เดือนต้องเป็นสองหลัก เช่น 01, 02, ...
     setSelectedDate(`${year}-${month}`);
   }, []);
+
   const handleReset = () => {
     window.location.reload(); // Refresh หน้าไหม
   };
@@ -31,28 +37,27 @@ function Per_H() {
       <div className="flex flex-row">
         <Menu_Ham />
         <div className='pl-5 pt-7 flex flex-col w-1/2'>
-        <span className='text-4xl font-bold text-black' style={{ width: "400px" }}>กำลังพลคู่ธุรกิจ</span>
-        <Mymonth selectedDate={selectedDate} />
+          <span className='text-4xl font-bold text-black' style={{ width: "400px" }}>กำลังพลคู่ธุรกิจ</span>
+          <Mymonth selectedDate={selectedDate} />
         </div>
         <div className='w-full flex flex-row pt-5 ' style={{ width: "900px" }}>
           <div className='w-1/2 text-center m-4 w-full'>
             <div className='h-8 text-white font-bold  text-2xl' style={{ backgroundColor: "#333333" }}>ส่วน</div>
-            <div className='h-9 bg-slate-300 '>
-              <select className="select select-ghost w-full max-w-xs">
-                <option disabled selected></option>
-                <option>Svelte</option>
-                <option>Vue</option>
-                <option>React</option>
-              </select>
+            <div className='h-9 bg-slate-300  '>
+              <DEPA_Per selectedDepa={selectedDepa} setSelectedDepa={setSelectedDepa} />
             </div>
           </div>
           <div className='w-1/2 text-center m-4 w-full'>
             <div className='h-8 text-white font-bold  text-2xl' style={{ backgroundColor: "#333333" }}>แผนก</div>
-            <div className='h-9 bg-slate-300 p-2'></div>
+            <div className='h-9 bg-slate-300 '>
+              <SEC_Per key={selectedDepa} selectedDepa={selectedDepa} />
+            </div>
           </div>
           <div className='w-1/2 text-center m-4 w-full' style={{ width: "1200px" }}>
             <div className='h-8 text-white font-bold text-2xl' style={{ backgroundColor: "#333333" }}>เจ้าของสัญญา</div>
-            <div className='h-9 bg-slate-300 p-2'></div>
+            <div className='h-9 bg-slate-300 flex items-center justify-center'>
+              <CON_Par />
+            </div>
           </div>
           <div className='w-1/2 text-center m-4 w-full' style={{ width: "1200px" }}>
             <div className='h-8 text-white font-bold text-2xl' style={{ backgroundColor: "#333333" }}>เดือน / ปี</div>
@@ -72,7 +77,7 @@ function Per_H() {
           <Per_G selectedDate={selectedDate} />
         </div>
         <div className="w-1/2 border border-black m-2">
-          <Gar />
+          <Per_Pro selectedDepa={selectedDepa} />
         </div>
       </div>
       <div className="border border-black m-2">

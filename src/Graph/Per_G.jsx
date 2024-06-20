@@ -90,8 +90,10 @@ const Per_G = ({ selectedDate }) => {
             x: {
                 beginAtZero: true,
                 ticks: {
+                    color: 'black',
                     font: {
                         family: 'MySCG',
+                        
                         weight: 'bold',
                         size: 15 // Adjusted font size
                     }
@@ -101,7 +103,9 @@ const Per_G = ({ selectedDate }) => {
             y: {
                 beginAtZero: true,
                 max: 100,
+                
                 ticks: {
+                    color: 'black',
                     font: {
                         family: 'MySCG',
                         weight: 'bold',
@@ -168,7 +172,7 @@ const Per_G = ({ selectedDate }) => {
                 font: {
                     family: 'MySCG',
                     weight: 'bold',
-                    size: 16 // Adjusted font size
+                    size: 17 // Adjusted font size
                 },
                 formatter: (value) => `${value}`
             }
