@@ -21,7 +21,7 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Per_Pro = ({ selectedDepa }) => {
+const Per_Pro = ({ selectedDepa, selectedSec, selectedDate }) => {
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
@@ -31,51 +31,77 @@ const Per_Pro = ({ selectedDepa }) => {
     const [totalNonProcess, setTotalNonProcess] = useState(0);
 
     const processData = {
-        'ส่วน A': [25, 25, 25],
-        'ส่วน B': [4, 3, 3],
+        'ส่วน A': {
+            'แผนก 1': [2, 1], // Process data for นาย A and นาย B
+            'แผนก 2': [2, 2],
+            'แผนก 3': [1, 3],
+        },
+        'ส่วน B': {
+            'แผนก 4': [4, 3],
+            'แผนก 5': [2, 1],
+            'แผนก 6': [5, 2],
+        }
     };
 
     const nonProcessData = {
-        'ส่วน A': [33, 33, 34],
-        'ส่วน B': [1, 1, 3],
+        'ส่วน A': {
+            'แผนก 1': [2, 2], // Non Process data for นาย A and นาย B
+            'แผนก 2': [3, 4],
+            'แผนก 3': [2, 2],
+        },
+        'ส่วน B': {
+            'แผนก 4': [1, 2],
+            'แผนก 5': [1, 3],
+            'แผนก 6': [2, 1],
+        }
+    };
+
+    const adjustDataByMonth = (data, month) => {
+        if (month === '2024-05' || month === '2024-06') {
+            return data.map(value => value + 10);
+        } else if (month === '2024-08') {
+            return data; // keep original data for August 2024
+        } else {
+            return data.map(() => 0); // set data to 0 for all other months
+        }
     };
 
     useEffect(() => {
         let processTotal = 0;
         let nonProcessTotal = 0;
 
-        if (selectedDepa === 'ทั้งหมด') {
-            const totalProcess = [75, 10, 15, 30, 10, 12];
-            const totalNonProcess = [100, 5, 15, 20, 21, 5];
-            const totalData = totalProcess.map((process, index) => process + totalNonProcess[index]);
-            const processPercentages = totalProcess.map((value, index) => (value / totalData[index]) * 100);
-            const nonProcessPercentages = totalNonProcess.map((value, index) => (value / totalData[index]) * 100);
+        if (selectedSec && selectedSec !== 'ทั้งหมด') {
+            const selectedProcessData = adjustDataByMonth(processData[selectedDepa][selectedSec], selectedDate);
+            const selectedNonProcessData = adjustDataByMonth(nonProcessData[selectedDepa][selectedSec], selectedDate);
+            const totalData = selectedProcessData.map((process, index) => process + selectedNonProcessData[index]);
+            const processPercentages = selectedProcessData.map((value, index) => (value / totalData[index]) * 100);
+            const nonProcessPercentages = selectedNonProcessData.map((value, index) => (value / totalData[index]) * 100);
 
-            processTotal = totalProcess.reduce((a, b) => a + b, 0);
-            nonProcessTotal = totalNonProcess.reduce((a, b) => a + b, 0);
+            processTotal = selectedProcessData.reduce((a, b) => a + b, 0);
+            nonProcessTotal = selectedNonProcessData.reduce((a, b) => a + b, 0);
 
             setChartData({
-                labels: ['ส่วน A', 'ส่วน B', 'ส่วน C', 'ส่วน D', 'ส่วน E', 'ส่วน F'],
+                labels: selectedSec === 'แผนก 1' ? ['นาย A', 'นาย B'] : selectedSec === 'แผนก 2' ? ['นาย C', 'นาย D'] : selectedSec === 'แผนก 3' ? ['นาย E', 'นาย F'] : selectedSec === 'แผนก 4' ? ['นาย G', 'นาย H'] : selectedSec === 'แผนก 5' ? ['นาย I', 'นาย J'] : ['นาย K', 'นาย L'],
                 datasets: [
                     {
                         label: 'Process',
                         data: processPercentages,
-                        originalData: totalProcess,
+                        originalData: selectedProcessData,
                         backgroundColor: '#a05100',
                         stack: 'Stack 0'
                     },
                     {
                         label: 'Non Process',
                         data: nonProcessPercentages,
-                        originalData: totalNonProcess,
+                        originalData: selectedNonProcessData,
                         backgroundColor: '#ffd700',
                         stack: 'Stack 0'
                     }
                 ]
             });
-        } else {
-            const selectedProcessData = processData[selectedDepa];
-            const selectedNonProcessData = nonProcessData[selectedDepa];
+        } else if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
+            const selectedProcessData = adjustDataByMonth(Object.values(processData[selectedDepa]).flat(), selectedDate);
+            const selectedNonProcessData = adjustDataByMonth(Object.values(nonProcessData[selectedDepa]).flat(), selectedDate);
             const totalData = selectedProcessData.map((process, index) => process + selectedNonProcessData[index]);
             const processPercentages = selectedProcessData.map((value, index) => (value / totalData[index]) * 100);
             const nonProcessPercentages = selectedNonProcessData.map((value, index) => (value / totalData[index]) * 100);
@@ -102,11 +128,40 @@ const Per_Pro = ({ selectedDepa }) => {
                     }
                 ]
             });
+        } else {
+            const totalProcess = adjustDataByMonth([75, 10, 15, 30, 10, 12], selectedDate);
+            const totalNonProcess = adjustDataByMonth([100, 5, 15, 20, 21, 5], selectedDate);
+            const totalData = totalProcess.map((process, index) => process + totalNonProcess[index]);
+            const processPercentages = totalProcess.map((value, index) => (value / totalData[index]) * 100);
+            const nonProcessPercentages = totalNonProcess.map((value, index) => (value / totalData[index]) * 100);
+
+            processTotal = totalProcess.reduce((a, b) => a + b, 0);
+            nonProcessTotal = totalNonProcess.reduce((a, b) => a + b, 0);
+
+            setChartData({
+                labels: ['ส่วน A', 'ส่วน B', 'ส่วน C', 'ส่วน D', 'ส่วน E', 'ส่วน F'],
+                datasets: [
+                    {
+                        label: 'Process',
+                        data: processPercentages,
+                        originalData: totalProcess,
+                        backgroundColor: '#a05100',
+                        stack: 'Stack 0'
+                    },
+                    {
+                        label: 'Non Process',
+                        data: nonProcessPercentages,
+                        originalData: totalNonProcess,
+                        backgroundColor: '#ffd700',
+                        stack: 'Stack 0'
+                    }
+                ]
+            });
         }
 
         setTotalProcess(processTotal);
         setTotalNonProcess(nonProcessTotal);
-    }, [selectedDepa]);
+    }, [selectedDepa, selectedSec, selectedDate]);
 
     const options = {
         responsive: true,
@@ -190,7 +245,7 @@ const Per_Pro = ({ selectedDepa }) => {
     return (
         <div className='bg-slate-300 h-full'>
             <div className='text-center font-bold text-2xl text-white h-9 p' style={{ backgroundColor: "#333333" }}>
-                กำลังผลคู่ธุรกิจตามสัญญา (Process / Non Process)
+                กำลังพลคู่ธุรกิจตามสัญญา (Process / Non Process)
             </div>
             <div className='flex'>
                 <div className='w-1/2 text-center m-2'>

@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SEC_Per = ({ selectedDepa, resetSec }) => {
+const SEC_Per = ({ selectedDepa, selectedSec, setSelectedSec }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('ทั้งหมด');
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    setSelectedOption('ทั้งหมด'); // Reset the selected option when selectedDepa changes
-  }, [resetSec]);
+    setSelectedSec('ทั้งหมด'); // Reset the selected option when selectedDepa changes
+  }, [selectedDepa]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
+    setSelectedSec(option);
     setIsOpen(false);
   };
 
@@ -49,7 +48,7 @@ const SEC_Per = ({ selectedDepa, resetSec }) => {
           onClick={toggleDropdown}
           style={{ boxShadow: 'none', backgroundColor: 'transparent' }}
         >
-          {selectedOption}
+          {selectedSec || 'ทั้งหมด'}
           <svg
             className="-mr-1 ml-2 h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"

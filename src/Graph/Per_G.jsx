@@ -67,7 +67,7 @@ const Per_G = ({ selectedDate }) => {
             data: months.map(month => getDataByMonth(month)[1])
         },
         {
-            label: 'คนใน Piecewoek',
+            label: 'คนใน Piecework',
             backgroundColor: months.map(month => month === formatDateLabel(selectedDate) ? colors[2] : '#d3d3d3'),
             data: months.map(month => getDataByMonth(month)[2])
         },

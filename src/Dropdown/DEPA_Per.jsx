@@ -33,7 +33,7 @@ const DEPA_Per = ({ selectedDepa, setSelectedDepa }) => {
           onClick={toggleDropdown}
           style={{ boxShadow: 'none', backgroundColor: 'transparent' }}
         >
-          {selectedDepa}
+          {selectedDepa || 'ทั้งหมด'}
           <svg
             className="-mr-1 ml-2 h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"

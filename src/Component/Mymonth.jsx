@@ -6,7 +6,7 @@ const Mymonth = ({ selectedDate }) => {
   const formattedDate = selectedDate ? format(new Date(selectedDate), 'MMMM yyyy', { locale: th }) : 'No date selected';
 
   return (
-   <div>
+    <div>
       <span className='text-4xl font-bold'>{formattedDate}</span>
     </div>
   );

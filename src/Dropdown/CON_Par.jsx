@@ -1,10 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const CON_Par = () => {
+const CON_Par = ({ selectedDepa, selectedSec }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-  const options = ['นาย A', 'นาย B', 'นาย C', 'นาย E', 'นาย F', 'นาย G', 'นาย H', 'นาย I'];
   const dropdownRef = useRef(null);
+
+  const allOptions = {
+    'ส่วน A': {
+      'แผนก 1': ['นาย A', 'นาย B'],
+      'แผนก 2': ['นาย C', 'นาย D'],
+      'แผนก 3': ['นาย E', 'นาย F'],
+    },
+    'ส่วน B': {
+      'แผนก 4': ['นาย G', 'นาย H'],
+      'แผนก 5': ['นาย I', 'นาย J'],
+      'แผนก 6': ['นาย K', 'นาย L'],
+    }
+  };
+
+  let options = [];
+
+  if (selectedSec && selectedSec !== 'ทั้งหมด') {
+    options = allOptions[selectedDepa][selectedSec] || [];
+  } else if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
+    options = Object.values(allOptions[selectedDepa]).flat();
+  } else {
+    options = Object.values(allOptions).flatMap(section => Object.values(section).flat());
+  }
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -31,7 +53,7 @@ const CON_Par = () => {
       <div className="flex justify-center items-center h-full">
         <button
           type="button"
-          className="inline-flex justify-between items-center w-full rounded-md shadow-sm px-4 py-2 bg-transparent text-lg font-bold text-gray-700 focus:outline-none h-12 font-MySCG"
+          className="inline-flex justify-between items-center w-full rounded-md shadow-sm px-4 py-2 bg-transparent text-lg font-bold text-gray-700 focus:outline-none h-12 font-mySCG"
           onClick={toggleDropdown}
           style={{ boxShadow: 'none', backgroundColor: 'transparent' }}
         >
@@ -58,7 +80,7 @@ const CON_Par = () => {
             {options.map((option, index) => (
               <button
                 key={index}
-                className="block w-full text-left px-4 py-2 text-lg font-bold font-MySCG text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none"
+                className="block w-full text-left px-4 py-2 text-lg font-bold font-mySCG text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none"
                 onClick={() => handleOptionClick(option)}
               >
                 {option}
