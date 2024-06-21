@@ -23,3 +23,12 @@
     font-family: 'MySCG', sans-serif;
     font-weight: bold;
 }
+
+/* Define font size adjustments */
+.font-size-lg {
+    font-size: 1.25rem; /* Example size, adjust as needed */
+}
+
+.font-size-xl {
+    font-size: 1.5rem; /* Example size, adjust as needed */
+}

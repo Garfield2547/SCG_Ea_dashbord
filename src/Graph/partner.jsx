@@ -15,13 +15,20 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Partner = () => {
+const Partner = ({ gradeCounts, onGradeClick }) => {
     const data = {
         labels: ['A', 'B', 'C', 'D', 'E', 'NO'],
         datasets: [
             {
                 label: 'Number of Contracts',
-                data: [325, 75, 50, 100, 60, 40],
+                data: [
+                    gradeCounts.A,
+                    gradeCounts.B,
+                    gradeCounts.C,
+                    gradeCounts.D,
+                    gradeCounts.E,
+                    gradeCounts.NO
+                ],
                 backgroundColor: [
                     '#ff6384',
                     '#36a2eb',
@@ -38,6 +45,7 @@ const Partner = () => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
+        color: 'black',
         plugins: {
             legend: {
                 display: true,
@@ -45,18 +53,33 @@ const Partner = () => {
                 labels: {
                     usePointStyle: true,
                     pointStyle: 'circle',
+                    font: {
+                        family: 'MySCG',
+                        size: 16,
+                        weight: 'bold'
+                    }
                 }
             },
             tooltip: {
                 enabled: true,
                 mode: 'nearest',
-                intersect: true, // Ensure the tooltip only shows when the cursor is over the segment
+                intersect: true,
                 callbacks: {
                     label: function(context) {
                         const label = context.label || '';
                         const value = context.raw || 0;
                         return `${label}: ${value}`;
                     }
+                },
+                titleFont: {
+                    family: 'MySCG',
+                    size: 16,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    family: 'MySCG',
+                    size: 16,
+                    weight: 'bold'
                 }
             },
             datalabels: {
@@ -64,11 +87,23 @@ const Partner = () => {
                 align: 'end',
                 offset: 2,
                 color: 'black',
+                font: {
+                    family: 'MySCG',
+                    size: 16,
+                    weight: 'bold'
+                },
                 formatter: (value, context) => {
                     const total = context.chart._metasets[context.datasetIndex].total;
                     const percentage = ((value / total) * 100).toFixed(2);
                     return `${value} (${percentage}%)`;
                 }
+            }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                const chartElement = elements[0];
+                const grade = data.labels[chartElement.index];
+                onGradeClick(grade);
             }
         },
         layout: {
@@ -83,7 +118,7 @@ const Partner = () => {
 
     return (
         <div className='bg-slate-300 h-full'>
-            <div className='text-white text-center font-bold text-2xl h-10 p-1' style={{ backgroundColor: "#333333" }}>
+            <div className='text-white text-center font-bold text-2xl h-10 p-1 font-bold font-size-xl' style={{ backgroundColor: "#333333" }}>
                 จำนวน แผนกในOprสัญญาแยกตามเกรด
             </div>
             <div className='bg-white m-2' style={{ height: "500px", maxWidth: "700px" }}>

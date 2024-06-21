@@ -4,7 +4,7 @@ import Per_G from '../Graph/Per_G';
 import Md from '../Graph/md';
 import Partner1 from '../Graph/partner1';
 import Partner from '../Graph/partner';
-import T_List from '../ํTable/T_List';
+import TList from '../ํTable/T_List';
 import { Navbar } from '../Component/Navbar';
 import Menu_Ham from '../Component/Menu_Ham';
 import MyDate from '../Component/MyDate';
@@ -13,29 +13,57 @@ import DEPA_Per from '../Dropdown/DEPA_Per';
 import SEC_Per from '../Dropdown/SEC_Per';
 import Per_Pro from '../Graph/Per_Pro';
 import CON_Par from '../Dropdown/CON_Par';
+import Data_Pro from '../Data_People/Data_Pro'; // Import the dataset
 
 function Per_H() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedDepa, setSelectedDepa] = useState('ทั้งหมด');
   const [selectedSec, setSelectedSec] = useState('ทั้งหมด');
+  const [gradeCounts, setGradeCounts] = useState({ A: 0, B: 0, C: 0, D: 0, E: 0, NO: 0 });
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // เดือนต้องเป็นสองหลัก เช่น 01, 02, ...
+    const month = (currentDate.getMonth() + 0).toString().padStart(2, '0');
     setSelectedDate(`${year}-${month}`);
   }, []);
 
+  useEffect(() => {
+    const counts = { A: 0, B: 0, C: 0, D: 0, E: 0, NO: 0 };
+    Data_Pro.forEach(person => {
+      if (counts[person.Grade] !== undefined) {
+        counts[person.Grade]++;
+      }
+    });
+    setGradeCounts(counts);
+  }, []);
+
   const handleReset = () => {
-    setSelectedDate('');
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    setSelectedDate(`${year}-${month}`);
     setSelectedDepa('ทั้งหมด');
     setSelectedSec('ทั้งหมด');
+    setSelectedGrade('');
+    setCurrentPage(1);
   };
+
+  const handleGradeClick = (grade) => {
+    setSelectedGrade(grade);
+    setCurrentPage(1);
+  };
+
+  const filteredData = selectedGrade
+    ? Data_Pro.filter(person => person.Grade === selectedGrade)
+    : [];
 
   return (
     <>
       <Navbar />
-      {/* กำลังพล */}
       <div className="flex flex-row">
         <Menu_Ham />
         <div className='pl-5 pt-7 flex flex-col w-1/2'>
@@ -68,12 +96,11 @@ function Per_H() {
             </div>
           </div>
           <button className="btn btn-active btn-neutral pb-1 mt-4 mr-2 ml-2 text-lg" 
-          style={{ width: "100px",height: "69px" }} 
+          style={{ width: "100px", height: "69px" }} 
           onClick={handleReset}>Reset</button>
         </div>
       </div>
 
-      {/* กราฟต่างๆ */}
       <div className="flex flex-row ">
         <div className="w-1/2 border border-black m-2">
           <Per_G selectedDate={selectedDate} />
@@ -90,10 +117,10 @@ function Per_H() {
           <Partner1 />
         </div>
         <div className='w-1/2 border border-black m-2'>
-          <Partner />
+          <Partner gradeCounts={gradeCounts} onGradeClick={handleGradeClick} /> {/* Pass the handler */}
         </div>
       </div>
-      <T_List />
+      <TList data={filteredData} currentPage={currentPage} onPageChange={setCurrentPage} /> {/* Pass the filtered data and page handlers */}
     </>
   );
 }

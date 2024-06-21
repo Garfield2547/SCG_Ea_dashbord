@@ -1,61 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const TList = () => {
+const TList = ({ data, currentPage, onPageChange }) => {
+  const [showSkeleton, setShowSkeleton] = useState(true);
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  useEffect(() => {
+    setShowSkeleton(true);
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 1250);
+
+    return () => clearTimeout(timer);
+  }, [currentPage, data]);
+
+  const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <>
-      <div className='m-2 h-11 text-sm p-3 rounded-xl' style={{ backgroundColor: "#333333" }}>
-        <span className='text-white font-bold'>ลำดับ</span>
-        <span className='text-white font-bold px-12'>ชื่อ</span>
-        <span className='text-white font-bold px-12'>สกุล</span>
-        <span className='text-white font-bold px-12'>สังกัด/ทาง</span>
-        <span className='text-white font-bold px-16'>ส่วน</span>
-        <span className='text-white font-bold px-12'>สัญญา</span>
-        <span className='text-white font-bold px-12'>Process/Non Process</span>
-        <span className='text-white font-bold px-10'>job title</span>
-        <span className='text-white font-bold px-5'>Grade</span>
-        <span className='text-white font-bold px-5'>อายุ (ปี)</span>
-        <span className='text-white font-bold px-5'>อายุงาน</span>
+      <div className='m-2 h-16 text-sm p-3 rounded-xl' style={{ backgroundColor: "#333333", display: 'flex', alignItems: 'center', fontSize: '19px' }}>
+        <span className='text-white font-bold' style={{ flex: 1, textAlign: 'center' }}>ลำดับ</span>
+        <span className='text-white font-bold' style={{ flex: 2, textAlign: 'center' }}>ชื่อ</span>
+        <span className='text-white font-bold' style={{ flex: 2, textAlign: 'center' }}>สกุล</span>
+        <span className='text-white font-bold' style={{ flex: 3, textAlign: 'center' }}>สังกัด/ทาง</span>
+        <span className='text-white font-bold' style={{ flex: 2, textAlign: 'center' }}>ส่วน</span>
+        <span className='text-white font-bold' style={{ flex: 2, textAlign: 'center' }}>แผนก</span>
+        <span className='text-white font-bold' style={{ flex: 3, textAlign: 'center' }}>สัญญา</span>
+        <span className='text-white font-bold' style={{ flex: 3, textAlign: 'center' }}>Process/Non Process</span>
+        <span className='text-white font-bold' style={{ flex: 1.5, textAlign: 'center' }}>Grade</span>
+        <span className='text-white font-bold' style={{ flex: 1.5, textAlign: 'center' }}>อายุ (ปี)</span>
+        <span className='text-white font-bold' style={{ flex: 1.5, textAlign: 'center' }}>อายุงาน</span>
       </div>
 
-      <div className='bg-white m-2 h-14 text-xl p-3 rounded-xl shadow shadow-gray-800'>
-        <div className='text-sm pt-2'>
-          <span className='text-black font-bold px-2'>1</span>
-          <span className='text-black font-bold px-10'>พีระพงศ์</span>
-          <span className='text-black font-bold px-8'>เกิดรอด</span>
-          <span className='text-black font-bold px-12'>หจก.นครแอร์</span>
-          <span className='text-black font-bold'>Mining and Circularity</span>
-          <span className='text-black font-bold px-4'>Ts_QR_26_2566</span>
-          <span className='text-black font-bold pl-20'>Non Process</span>
-          <span className='text-black font-bold pl-24'>เตรียม Biomass</span>
-          <span className='text-black font-bold px-14'>B</span>
-          <span className='text-black font-bold px-3'>25</span>
-          <span className='text-black font-bold pl-16'>5</span>
-        </div>
-      </div>
+      {showSkeleton ? (
+        <>
+          {Array.from({ length: itemsPerPage }).map((_, index) => (
+            <div key={index} className='m-2 p-3 rounded-xl skeleton' style={{ height: '56px' }}></div>
+          ))}
+        </>
+      ) : (
+        paginatedData.map((person, index) => (
+          <div key={index} className='bg-white m-2 h-14 text-xl p-3 rounded-xl shadow shadow-gray-800' style={{ display: 'flex', alignItems: 'center' }}>
+            <span className='text-black font-bold text-base' style={{ flex: 1, textAlign: 'center' }}>{(currentPage - 1) * itemsPerPage + index + 1}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 2, textAlign: 'center' }}>{person.ชื่อ}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 2, textAlign: 'center' }}>{person.สกุล}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 3, textAlign: 'center' }}>{person.สังกัด}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 2, textAlign: 'center' }}>{person.ส่วน}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 2, textAlign: 'center' }}>{person.แผนก}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 3, textAlign: 'center' }}>{person.สัญญา}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 3, textAlign: 'center' }}>{person.Process_NonProcess}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 1.5, textAlign: 'center' }}>{person.Grade}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 1.5, textAlign: 'center' }}>{person.อายุ}</span>
+            <span className='text-black font-bold text-base' style={{ flex: 1.5, textAlign: 'center' }}>{person.อายุงาน}</span>
+          </div>
+        ))
+      )}
 
-      <div className='bg-white m-2 h-14 text-xl p-3 rounded-xl shadow shadow-gray-800'>
-        <div className='text-sm pt-2'>
-          <span className='text-black font-bold px-2'>2</span>
-          <span className='text-black font-bold px-10'>พีระพงศ์</span>
-          <span className='text-black font-bold px-8'>เกิดรอด</span>
-          <span className='text-black font-bold px-12'>หจก.นครแอร์</span>
-          <span className='text-black font-bold'>Mining and Circularity</span>
-          <span className='text-black font-bold px-4'>Ts_QR_26_2566</span>
-          <span className='text-black font-bold pl-20'>Non Process</span>
-          <span className='text-black font-bold pl-24'>เตรียม Biomass</span>
-          <span className='text-black font-bold px-14'>B</span>
-          <span className='text-black font-bold px-3'>25</span>
-          <span className='text-black font-bold pl-16'>5</span>
-        </div>
-      </div>
-      
       <div className='flex justify-end m-2 pt-2'>
         <div className="join">
-          <button className="join-item btn">1</button>
-          <button className="join-item btn">2</button>
-          <button className="join-item btn btn-disabled">...</button>
-          <button className="join-item btn">99</button>
-          <button className="join-item btn">100</button>
+          {[...Array(totalPages).keys()].map(page => (
+            <input
+              key={page + 1}
+              className="join-item btn btn-square"
+              type="radio"
+              name="options"
+              aria-label={page + 1}
+              checked={currentPage === page + 1}
+              onChange={() => onPageChange(page + 1)}
+            />
+          ))}
         </div>
       </div>
     </>

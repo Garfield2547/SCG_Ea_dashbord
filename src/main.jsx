@@ -15,6 +15,7 @@ import Per_H from "./Personnel/Per_H";
 import CoT_P from "./Cost/CoT_P";
 import CoT_O from "./Cost/CoT_O";
 import CoT_O_Op from "./Cost/CoT_O_Op";
+import Test from "./Data_People/Test";
 
 
 
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path:"/Cot_O_Op",
     element:<CoT_O_Op/>
+  },
+  {
+    path:"/T",
+    element:<Test/>
   },
   
   
