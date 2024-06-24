@@ -4,7 +4,7 @@ import Per_G from '../Graph/Per_G';
 import Md from '../Graph/md';
 import Partner1 from '../Graph/partner1';
 import Partner from '../Graph/partner';
-import TList from '../ํTable/T_List';
+import T_List from '../ํTable/T_List';
 import { Navbar } from '../Component/Navbar';
 import Menu_Ham from '../Component/Menu_Ham';
 import MyDate from '../Component/MyDate';
@@ -21,6 +21,7 @@ function Per_H() {
   const [selectedSec, setSelectedSec] = useState('ทั้งหมด');
   const [gradeCounts, setGradeCounts] = useState({ A: 0, B: 0, C: 0, D: 0, E: 0, NO: 0 });
   const [selectedGrade, setSelectedGrade] = useState('');
+  const [selectedBar, setSelectedBar] = useState({ grade: '', department: '' });
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -49,17 +50,27 @@ function Per_H() {
     setSelectedDepa('ทั้งหมด');
     setSelectedSec('ทั้งหมด');
     setSelectedGrade('');
+    setSelectedBar({ grade: '', department: '' });
     setCurrentPage(1);
   };
 
   const handleGradeClick = (grade) => {
     setSelectedGrade(grade);
+    setSelectedBar({ grade: '', department: '' });
+    setCurrentPage(1);
+  };
+
+  const handleBarClick = ({ grade, department }) => {
+    setSelectedBar({ grade, department });
+    setSelectedGrade('');
     setCurrentPage(1);
   };
 
   const filteredData = selectedGrade
     ? Data_Pro.filter(person => person.Grade === selectedGrade)
-    : [];
+    : selectedBar.grade
+      ? Data_Pro.filter(person => person.Grade === selectedBar.grade && person.แผนก === selectedBar.department)
+      : [];
 
   return (
     <>
@@ -114,13 +125,13 @@ function Per_H() {
       </div>
       <div className='flex flex-row'>
         <div className='w-1/2 border border-black m-2'>
-          <Partner1 />
+          <Partner1 onBarClick={handleBarClick} />
         </div>
         <div className='w-1/2 border border-black m-2'>
-          <Partner gradeCounts={gradeCounts} onGradeClick={handleGradeClick} /> {/* Pass the handler */}
+          <Partner gradeCounts={gradeCounts} onGradeClick={handleGradeClick} />
         </div>
       </div>
-      <TList data={filteredData} currentPage={currentPage} onPageChange={setCurrentPage} /> {/* Pass the filtered data and page handlers */}
+      <T_List data={filteredData} currentPage={currentPage} onPageChange={setCurrentPage} />
     </>
   );
 }

@@ -59,7 +59,7 @@ const DEPA_Per = ({ selectedDepa, setSelectedDepa }) => {
           tabIndex="-1"
         >
           <div className="py-1" role="none">
-            {['ส่วน A', 'ส่วน B', 'ส่วน C', 'ส่วน D', 'ส่วน E', 'ส่วน F'].map((option) => (
+            {['ส่วน A', 'ส่วน B', 'ส่วน C', 'ส่วน D'].map((option) => (
               <a
                 key={option}
                 href="#"

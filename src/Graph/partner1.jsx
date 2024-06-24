@@ -9,6 +9,7 @@ import {
     Legend
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Data_Pro from '../Data_People/Data_Pro'; // Import the dataset
 
 ChartJS.register(
     BarElement,
@@ -19,41 +20,31 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Partner1 = () => {
+const Partner1 = ({ onBarClick }) => {
+    // Process Data_Pro to get the counts for each grade in each department
+    const departments = [...new Set(Data_Pro.map(person => person.แผนก))];
+    const grades = ['A', 'B', 'C', 'D', 'E', 'NO'];
+    
+    const datasets = grades.map(grade => {
+        return {
+            label: grade,
+            data: departments.map(department => {
+                return Data_Pro.filter(person => person.แผนก === department && person.Grade === grade).length;
+            }),
+            backgroundColor: {
+                A: '#ff6384',
+                B: '#36a2eb',
+                C: '#4bc0c0',
+                D: '#9966ff',
+                E: '#ffcd56',
+                NO: '#c9cbcf'
+            }[grade]
+        };
+    });
+
     const data = {
-        labels: ['แผนกในOpr', 'แผนกในOpr', 'แผนกในOpr', 'แผนกในOpr', 'แผนกในOpr'],
-        datasets: [
-            {
-                label: 'A',
-                data: [50, 150, 35, 50, 100],
-                backgroundColor: '#ff6384'
-            },
-            {
-                label: 'B',
-                data: [75, 80, 85, 50, 60],
-                backgroundColor: '#36a2eb'
-            },
-            {
-                label: 'C',
-                data: [50, 60, 70, 40, 50],
-                backgroundColor: '#4bc0c0'
-            },
-            {
-                label: 'D',
-                data: [50, 120, 140, 90, 110],
-                backgroundColor: '#9966ff'
-            },
-            {
-                label: 'E',
-                data: [60, 80, 100, 60, 80],
-                backgroundColor: '#ffcd56'
-            },
-            {
-                label: 'NO',
-                data: [40, 50, 60, 30, 40],
-                backgroundColor: '#c9cbcf'
-            }
-        ]
+        labels: departments,
+        datasets: datasets
     };
 
     const options = {
@@ -61,12 +52,29 @@ const Partner1 = () => {
         maintainAspectRatio: false,
         scales: {
             x: {
-                stacked: true
+                stacked: true,
+                ticks: {
+                    color: 'black',
+                    font: {
+                        family: 'MySCG',
+                        size: 15,
+                        weight: 'bold' // Make the x-axis text bold
+                    }
+                }
             },
             y: {
                 beginAtZero: true,
                 stacked: true,
-                max: 700 // Adjust this value to set the maximum y-axis value to 700
+                max: 17,
+                
+                ticks: {
+                    color: 'black',
+                    font: {
+                        family: 'MySCG',
+                        size: 16,
+                        weight: 'bold' // Make the y-axis text bold
+                    }
+                }
             }
         },
         plugins: {
@@ -75,7 +83,13 @@ const Partner1 = () => {
                 position: 'top',
                 labels: {
                     usePointStyle: true,
-                    pointStyle: 'circle'
+                    color: 'black',
+                    pointStyle: 'circle',
+                    font: {
+                        family: 'MySCG',
+                        size: 15,
+                        weight: 'bold' // Make the legend text bold
+                    }
                 }
             },
             tooltip: {
@@ -86,6 +100,16 @@ const Partner1 = () => {
                     label: function (context) {
                         return `${context.dataset.label}: ${context.raw}`;
                     }
+                },
+                bodyFont: {
+                    family: 'MySCG',
+                    size: 16,
+                    weight: 'bold' // Make the tooltip body text bold
+                },
+                titleFont: {
+                    family: 'MySCG',
+                    size: 16,
+                    weight: 'bold' // Make the tooltip title text bold
                 }
             },
             datalabels: {
@@ -105,14 +129,27 @@ const Partner1 = () => {
 
                     // Display the sum only for the last dataset to avoid duplicate labels
                     return datasetIndex === datasets.length - 1 ? sum : null;
+                },
+                font: {
+                    family: 'MySCG',
+                    size: 18,
+                    weight: 'bold' // Make the datalabels text bold
                 }
+            }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                const chartElement = elements[0];
+                const grade = data.datasets[chartElement.datasetIndex].label;
+                const department = data.labels[chartElement.index];
+                onBarClick({ grade, department });
             }
         }
     };
 
     return (
         <div className='bg-slate-300 h-full'>
-            <div className='text-white text-center font-bold text-2xl h-10 p-1' style={{ backgroundColor: "#333333" }}>
+            <div className='text-white text-center font-bold text-2xl h-10 p-1 font-bold font-size-xl' style={{ backgroundColor: "#333333" }}>
                 จำนวน แผนกในOprสัญญาแยกตามเกรด
             </div>
             <div className='bg-white m-2' style={{ height: "500px", maxWidth: "1000px" }}>

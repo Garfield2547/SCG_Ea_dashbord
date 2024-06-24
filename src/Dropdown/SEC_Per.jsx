@@ -31,11 +31,15 @@ const SEC_Per = ({ selectedDepa, selectedSec, setSelectedSec }) => {
   const getOptions = () => {
     switch (selectedDepa) {
       case 'ส่วน A':
-        return ['แผนก 1', 'แผนก 2', 'แผนก 3'];
+        return ['แผนก 1', 'แผนก 2'];
       case 'ส่วน B':
-        return ['แผนก 4', 'แผนก 5', 'แผนก 6'];
+        return ['แผนก 3', 'แผนก 4'];
+      case 'ส่วน C':
+        return ['แผนก 5', 'แผนก 6'];
+      case 'ส่วน D':
+        return ['แผนก 7', 'แผนก 8'];
       default:
-        return ['แผนก 1', 'แผนก 2', 'แผนก 3', 'แผนก 4', 'แผนก 5', 'แผนก 6'];
+        return ['แผนก 1', 'แผนก 2', 'แผนก 3', 'แผนก 4', 'แผนก 5', 'แผนก 6', 'แผนก 7', 'แผนก 8'];
     }
   };
 

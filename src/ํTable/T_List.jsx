@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TList = ({ data, currentPage, onPageChange }) => {
+const T_List = ({ data, currentPage, onPageChange }) => {
   const [showSkeleton, setShowSkeleton] = useState(true);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -75,4 +75,4 @@ const TList = ({ data, currentPage, onPageChange }) => {
   );
 };
 
-export default TList;
+export default T_List;
