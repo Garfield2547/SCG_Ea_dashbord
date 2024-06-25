@@ -3,7 +3,7 @@ import '../App.css';
 import In_G from '../Graph/In_G';
 import In_T from '../Graph/In_T';
 import In_Pro from '../Graph/In_Pro';
-import T_List from '../ํTable/T_List';
+
 import Menu_Ham from '../Component/Menu_Ham';
 import { Navbar } from '../Component/Navbar';
 import MyDate from '../Component/MyDate';
@@ -74,7 +74,7 @@ function Input_1() {
           <In_Par />
         </div>
       </div>
-      <T_List/>
+     
     </>
   );
 }

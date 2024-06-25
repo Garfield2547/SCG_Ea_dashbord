@@ -23,6 +23,7 @@ function Per_H() {
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedBar, setSelectedBar] = useState({ grade: '', department: '' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -52,25 +53,29 @@ function Per_H() {
     setSelectedGrade('');
     setSelectedBar({ grade: '', department: '' });
     setCurrentPage(1);
+    setFilteredData([]);
   };
 
   const handleGradeClick = (grade) => {
     setSelectedGrade(grade);
     setSelectedBar({ grade: '', department: '' });
     setCurrentPage(1);
+    const filtered = Data_Pro.filter(person => person.Grade === grade);
+    setFilteredData(filtered);
   };
 
   const handleBarClick = ({ grade, department }) => {
     setSelectedBar({ grade, department });
     setSelectedGrade('');
     setCurrentPage(1);
+    const filtered = Data_Pro.filter(person => person.Grade === grade && person.แผนก === department);
+    setFilteredData(filtered);
   };
 
-  const filteredData = selectedGrade
-    ? Data_Pro.filter(person => person.Grade === selectedGrade)
-    : selectedBar.grade
-      ? Data_Pro.filter(person => person.Grade === selectedBar.grade && person.แผนก === selectedBar.department)
-      : [];
+  const handlePerProBarClick = ({ label, datasetLabel, groupBy }) => {
+    const filtered = Data_Pro.filter(person => person[groupBy] === label && person.Process_NonProcess === datasetLabel);
+    setFilteredData(filtered);
+  };
 
   return (
     <>
@@ -117,7 +122,7 @@ function Per_H() {
           <Per_G selectedDate={selectedDate} />
         </div>
         <div className="w-1/2 border border-black m-2">
-          <Per_Pro selectedDepa={selectedDepa} selectedSec={selectedSec} selectedDate={selectedDate} />
+          <Per_Pro selectedDepa={selectedDepa} selectedSec={selectedSec} selectedDate={selectedDate} onBarClick={handlePerProBarClick} />
         </div>
       </div>
       <div className="border border-black m-2">

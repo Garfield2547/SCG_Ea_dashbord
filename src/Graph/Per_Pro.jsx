@@ -22,7 +22,7 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Per_Pro = ({ selectedDepa, selectedSec, selectedDate }) => {
+const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
@@ -72,9 +72,7 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate }) => {
         const filteredData = filterDataByDepaSec(selectedDepa, selectedSec);
         let aggregatedData;
 
-        if (selectedDepa && selectedDepa !== 'ทั้งหมด' && (!selectedSec || selectedSec === 'ทั้งหมด')) {
-            aggregatedData = aggregateData(filteredData, 'แผนก');
-        } else if (selectedDepa && selectedDepa !== 'ทั้งหมด' && selectedSec && selectedSec !== 'ทั้งหมด') {
+        if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
             aggregatedData = aggregateData(filteredData, 'แผนก');
         } else {
             aggregatedData = aggregateData(filteredData, 'ส่วน');
@@ -181,6 +179,15 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate }) => {
                         size: 16
                     }
                 }
+            }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                const datasetIndex = elements[0].datasetIndex;
+                const index = elements[0].index;
+                const label = chartData.labels[index];
+                const datasetLabel = chartData.datasets[datasetIndex].label;
+                onBarClick({ label, datasetLabel, groupBy: selectedDepa === 'ทั้งหมด' ? 'ส่วน' : 'แผนก' });
             }
         }
     };
