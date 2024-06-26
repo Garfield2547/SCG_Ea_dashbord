@@ -35,12 +35,22 @@ function Per_H() {
   useEffect(() => {
     const counts = { A: 0, B: 0, C: 0, D: 0, E: 0, NO: 0 };
     Data_Pro.forEach(person => {
-      if (counts[person.Grade] !== undefined) {
-        counts[person.Grade]++;
+      if (selectedDate) {
+        const personDate = new Date(person.Date.split('/').reverse().join('-'));
+        const [year, month] = selectedDate.split('-');
+        if (personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month)) {
+          if (counts[person.Grade] !== undefined) {
+            counts[person.Grade]++;
+          }
+        }
+      } else {
+        if (counts[person.Grade] !== undefined) {
+          counts[person.Grade]++;
+        }
       }
     });
     setGradeCounts(counts);
-  }, []);
+  }, [selectedDate]);
 
   const handleReset = () => {
     const currentDate = new Date();
@@ -56,25 +66,45 @@ function Per_H() {
     setFilteredData([]);
   };
 
+  const scrollToBottom = () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  };
+
   const handleGradeClick = (grade) => {
     setSelectedGrade(grade);
     setSelectedBar({ grade: '', department: '' });
-    setCurrentPage(1);
-    const filtered = Data_Pro.filter(person => person.Grade === grade);
+    const [year, month] = selectedDate.split('-');
+    const filtered = Data_Pro.filter(person => {
+      const personDate = new Date(person.Date.split('/').reverse().join('-'));
+      return person.Grade === grade && personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month);
+    });
     setFilteredData(filtered);
+    setCurrentPage(1); // Reset current page to 1
+    scrollToBottom();
   };
 
   const handleBarClick = ({ grade, department }) => {
     setSelectedBar({ grade, department });
     setSelectedGrade('');
-    setCurrentPage(1);
-    const filtered = Data_Pro.filter(person => person.Grade === grade && person.แผนก === department);
+    const [year, month] = selectedDate.split('-');
+    const filtered = Data_Pro.filter(person => {
+      const personDate = new Date(person.Date.split('/').reverse().join('-'));
+      return person.Grade === grade && person.แผนก === department && personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month);
+    });
     setFilteredData(filtered);
+    setCurrentPage(1); // Reset current page to 1
+    scrollToBottom();
   };
 
   const handlePerProBarClick = ({ label, datasetLabel, groupBy }) => {
-    const filtered = Data_Pro.filter(person => person[groupBy] === label && person.Process_NonProcess === datasetLabel);
+    const [year, month] = selectedDate.split('-');
+    const filtered = Data_Pro.filter(person => {
+      const personDate = new Date(person.Date.split('/').reverse().join('-'));
+      return person[groupBy] === label && person.Process_NonProcess === datasetLabel && personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month);
+    });
     setFilteredData(filtered);
+    setCurrentPage(1); // Reset current page to 1
+    scrollToBottom();
   };
 
   return (
@@ -130,10 +160,10 @@ function Per_H() {
       </div>
       <div className='flex flex-row'>
         <div className='w-1/2 border border-black m-2'>
-          <Partner1 onBarClick={handleBarClick} />
+          <Partner1 selectedDate={selectedDate} onBarClick={handleBarClick} />
         </div>
         <div className='w-1/2 border border-black m-2'>
-          <Partner gradeCounts={gradeCounts} onGradeClick={handleGradeClick} />
+          <Partner gradeCounts={gradeCounts} selectedDate={selectedDate} onGradeClick={handleGradeClick} />
         </div>
       </div>
       <T_List data={filteredData} currentPage={currentPage} onPageChange={setCurrentPage} />

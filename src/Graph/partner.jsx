@@ -15,7 +15,7 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Partner = ({ gradeCounts, onGradeClick }) => {
+const Partner = ({ gradeCounts, onGradeClick, selectedDate }) => {
     const data = {
         labels: ['A', 'B', 'C', 'D', 'E', 'NO'],
         datasets: [
@@ -103,7 +103,7 @@ const Partner = ({ gradeCounts, onGradeClick }) => {
             if (elements.length > 0) {
                 const chartElement = elements[0];
                 const grade = data.labels[chartElement.index];
-                onGradeClick(grade);
+                onGradeClick(grade); // Pass selectedDate to the function
             }
         },
         layout: {
@@ -111,7 +111,7 @@ const Partner = ({ gradeCounts, onGradeClick }) => {
                 left: 30,
                 right: 30,
                 top: 20,
-                bottom: 50
+                bottom: 30
             }
         }
     };

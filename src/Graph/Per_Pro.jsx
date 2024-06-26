@@ -31,13 +31,20 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
     const [totalProcess, setTotalProcess] = useState(0);
     const [totalNonProcess, setTotalNonProcess] = useState(0);
 
-    const filterDataByDepaSec = (depa, sec) => {
+    const filterDataByDepaSecDate = (depa, sec, date) => {
         let filteredData = Data_Pro;
         if (depa && depa !== 'ทั้งหมด') {
             filteredData = filteredData.filter(person => person.ส่วน === depa);
         }
         if (sec && sec !== 'ทั้งหมด') {
             filteredData = filteredData.filter(person => person.แผนก === sec);
+        }
+        if (date) {
+            const [year, month] = date.split('-');
+            filteredData = filteredData.filter(person => {
+                const personDate = new Date(person.Date.split('/').reverse().join('-'));
+                return personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month);
+            });
         }
         return filteredData;
     };
@@ -54,7 +61,10 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
             return result;
         }, {});
 
-        Object.keys(groupedData).forEach(key => {
+        // Sort labels alphabetically
+        const sortedKeys = Object.keys(groupedData).sort();
+
+        sortedKeys.forEach(key => {
             labels.push(key);
             const process = groupedData[key].filter(person => person.Process_NonProcess === 'Process').length;
             const nonProcess = groupedData[key].filter(person => person.Process_NonProcess === 'Non Process').length;
@@ -69,7 +79,7 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
     };
 
     useEffect(() => {
-        const filteredData = filterDataByDepaSec(selectedDepa, selectedSec);
+        const filteredData = filterDataByDepaSecDate(selectedDepa, selectedSec, selectedDate);
         let aggregatedData;
 
         if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
@@ -188,6 +198,7 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
                 const label = chartData.labels[index];
                 const datasetLabel = chartData.datasets[datasetIndex].label;
                 onBarClick({ label, datasetLabel, groupBy: selectedDepa === 'ทั้งหมด' ? 'ส่วน' : 'แผนก' });
+                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
             }
         }
     };

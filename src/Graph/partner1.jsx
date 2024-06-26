@@ -20,16 +20,26 @@ ChartJS.register(
     ChartDataLabels
 );
 
-const Partner1 = ({ onBarClick }) => {
+const Partner1 = ({ onBarClick, selectedDate }) => {
     // Process Data_Pro to get the counts for each grade in each department
     const departments = [...new Set(Data_Pro.map(person => person.แผนก))];
     const grades = ['A', 'B', 'C', 'D', 'E', 'NO'];
-    
+
+    // Filter data based on selectedDate
+    const filteredData = Data_Pro.filter(person => {
+        if (selectedDate) {
+            const personDate = new Date(person.Date.split('/').reverse().join('-'));
+            const [year, month] = selectedDate.split('-');
+            return personDate.getFullYear() === parseInt(year) && (personDate.getMonth() + 1) === parseInt(month);
+        }
+        return true;
+    });
+
     const datasets = grades.map(grade => {
         return {
             label: grade,
             data: departments.map(department => {
-                return Data_Pro.filter(person => person.แผนก === department && person.Grade === grade).length;
+                return filteredData.filter(person => person.แผนก === department && person.Grade === grade).length;
             }),
             backgroundColor: {
                 A: '#ff6384',
@@ -65,7 +75,7 @@ const Partner1 = ({ onBarClick }) => {
             y: {
                 beginAtZero: true,
                 stacked: true,
-                max: 17,
+                max: 10,
                 
                 ticks: {
                     color: 'black',
@@ -149,7 +159,7 @@ const Partner1 = ({ onBarClick }) => {
 
     return (
         <div className='bg-slate-300 h-full'>
-            <div className='text-white text-center font-bold text-2xl h-10 p-1 font-bold font-size-xl' style={{ backgroundColor: "#333333" }}>
+            <div className='text-white text-center font-bold text-2xl h-10 p-1 font-size-xl' style={{ backgroundColor: "#333333" }}>
                 จำนวน แผนกในOprสัญญาแยกตามเกรด
             </div>
             <div className='bg-white m-2' style={{ height: "500px", maxWidth: "1000px" }}>
