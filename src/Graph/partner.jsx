@@ -30,17 +30,19 @@ const Partner = ({ gradeCounts, onGradeClick, selectedDate }) => {
                     gradeCounts.NO
                 ],
                 backgroundColor: [
-                    '#ff6384',
-                    '#36a2eb',
-                    '#4bc0c0',
-                    '#9966ff',
-                    '#ffcd56',
-                    '#c9cbcf'
+                    '#FD625E', // A
+                    '#676D6E', // B
+                    '#01B8AA', // C
+                    '#0D3C45', // D
+                    '#F7BA1E', // E
+                    '#B84301'  // NO
                 ],
                 hoverOffset: 4
             }
         ]
     };
+
+    
 
     const options = {
         responsive: true,

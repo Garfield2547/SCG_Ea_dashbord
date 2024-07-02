@@ -42,12 +42,12 @@ const Partner1 = ({ onBarClick, selectedDate }) => {
                 return filteredData.filter(person => person.แผนก === department && person.Grade === grade).length;
             }),
             backgroundColor: {
-                A: '#ff6384',
-                B: '#36a2eb',
-                C: '#4bc0c0',
-                D: '#9966ff',
-                E: '#ffcd56',
-                NO: '#c9cbcf'
+                A: '#FD625E',
+                B: '#676D6E',
+                C: '#01B8AA',
+                D: '#0D3C45',
+                E: '#F3C910',
+                NO: '#B84301'
             }[grade]
         };
     });

@@ -61,7 +61,6 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
             return result;
         }, {});
 
-        // Sort labels alphabetically
         const sortedKeys = Object.keys(groupedData).sort();
 
         sortedKeys.forEach(key => {
@@ -82,7 +81,9 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
         const filteredData = filterDataByDepaSecDate(selectedDepa, selectedSec, selectedDate);
         let aggregatedData;
 
-        if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
+        if (selectedSec && selectedSec !== 'ทั้งหมด') {
+            aggregatedData = aggregateData(filteredData, 'เจ้าของสัญญา');
+        } else if (selectedDepa && selectedDepa !== 'ทั้งหมด') {
             aggregatedData = aggregateData(filteredData, 'แผนก');
         } else {
             aggregatedData = aggregateData(filteredData, 'ส่วน');
@@ -197,7 +198,7 @@ const Per_Pro = ({ selectedDepa, selectedSec, selectedDate, onBarClick }) => {
                 const index = elements[0].index;
                 const label = chartData.labels[index];
                 const datasetLabel = chartData.datasets[datasetIndex].label;
-                onBarClick({ label, datasetLabel, groupBy: selectedDepa === 'ทั้งหมด' ? 'ส่วน' : 'แผนก' });
+                onBarClick({ label, datasetLabel, groupBy: selectedSec === 'ทั้งหมด' ? (selectedDepa === 'ทั้งหมด' ? 'ส่วน' : 'แผนก') : 'เจ้าของสัญญา' });
                 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
             }
         }

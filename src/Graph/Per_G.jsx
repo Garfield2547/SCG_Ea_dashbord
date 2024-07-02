@@ -55,25 +55,28 @@ const Per_G = ({ selectedDate }) => {
 
     const months = getPreviousMonths(selectedDate, 4);
     const colors = ['#004c6d', '#00b5ad', '#ff4b5c', '#fcbf49'];
+    const defaultColor = '#d3d3d3';
+    const selectedColor = '#ff0000';
+
     const datasets = [
         {
             label: 'คนในสัญญา',
-            backgroundColor: months.map(month => month === formatDateLabel(selectedDate) ? colors[0] : '#d3d3d3'),
+            backgroundColor: colors[0],
             data: months.map(month => getDataByMonth(month)[0])
         },
         {
             label: 'คนในสัญญามาปฎิบัติงาน',
-            backgroundColor: months.map(month => month === formatDateLabel(selectedDate) ? colors[1] : '#d3d3d3'),
+            backgroundColor: colors[1],
             data: months.map(month => getDataByMonth(month)[1])
         },
         {
             label: 'คนใน Piecework',
-            backgroundColor: months.map(month => month === formatDateLabel(selectedDate) ? colors[2] : '#d3d3d3'),
+            backgroundColor: colors[2],
             data: months.map(month => getDataByMonth(month)[2])
         },
         {
             label: 'คนใน Piecework มาปฎิบัติงาน',
-            backgroundColor: months.map(month => month === formatDateLabel(selectedDate) ? colors[3] : '#d3d3d3'),
+            backgroundColor: colors[3],
             data: months.map(month => getDataByMonth(month)[3])
         }
     ];
@@ -93,17 +96,14 @@ const Per_G = ({ selectedDate }) => {
                     color: 'black',
                     font: {
                         family: 'MySCG',
-                        
                         weight: 'bold',
                         size: 15 // Adjusted font size
                     }
                 }
-                
             },
             y: {
                 beginAtZero: true,
                 max: 100,
-                
                 ticks: {
                     color: 'black',
                     font: {
@@ -168,11 +168,15 @@ const Per_G = ({ selectedDate }) => {
             datalabels: {
                 anchor: 'end',
                 align: 'end',
-                color: 'black',
-                font: {
-                    family: 'MySCG',
-                    weight: 'bold',
-                    size: 17 // Adjusted font size
+                color: function(context) {
+                    return context.chart.data.labels[context.dataIndex] === formatDateLabel(selectedDate) ? selectedColor : 'black';
+                },
+                font: function(context) {
+                    return {
+                        family: 'MySCG',
+                        weight: 'bold',
+                        size: context.chart.data.labels[context.dataIndex] === formatDateLabel(selectedDate) ? 20 : 17
+                    };
                 },
                 formatter: (value) => `${value}`
             }
